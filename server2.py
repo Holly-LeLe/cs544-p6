@@ -13,7 +13,7 @@ nodes = [f"{project}-cassandra-1", f"{project}-cassandra-2", f"{project}-cassand
 session = None
 
 # Sentinel date for company information (to avoid returning it in stock record queries)
-COMPANY_INFO_DATE = date.min # 0001-01-01
+COMPANY_INFO_DATE = date(1970, 1, 1)
 
 def create_keyspace_and_table(session_obj, keyspace_name):
     print(f"Creating keyspace {keyspace_name}...")
