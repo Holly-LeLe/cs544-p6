@@ -1,0 +1,5 @@
+FROM mysql:8.4.0-oraclelinux8
+
+COPY schema.sql /schema.sql
+COPY init.sql /docker-entrypoint-initdb.d/
+CMD ["mysqld"]

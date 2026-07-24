@@ -1,0 +1,70 @@
+name: ${PROJECT}
+
+services:
+  mysql:
+    image: ${PROJECT}-mysql
+    build:
+      context: mysql
+      dockerfile: Dockerfile.mysql
+    hostname: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: acid
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pacid"]
+      interval: 5s
+      retries: 60
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  cassandra:
+    image: ${PROJECT}-cassandra
+    build:
+      context: cassandra
+      dockerfile: Dockerfile.cassandra
+    healthcheck:
+      test: ["CMD", "nodetool", "status"]
+      interval: 20s
+      retries: 120
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          memory: 1g
+    environment:
+      - PROJECT=${PROJECT}
+
+  # REST API, backed by MySQL
+  server1:
+    image: ${PROJECT}-server1
+    build:
+      context: .
+      dockerfile: Dockerfile.server1
+    ports:
+      - "5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  # REST API, backed by Cassandra
+  server2:
+    image: ${PROJECT}-server2
+    build:
+      context: .
+      dockerfile: Dockerfile.server2
+    depends_on:
+      cassandra:
+        condition: service_healthy
+    ports:
+      - "5000"
+    environment:
+      - PROJECT=${PROJECT}
+    deploy:
+      resources:
+        limits:
+          memory: 1g

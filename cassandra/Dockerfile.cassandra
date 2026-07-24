@@ -1,0 +1,11 @@
+FROM ubuntu:24.04
+RUN apt-get update && apt-get install -y wget openjdk-17-jdk python3-pip && rm -rf /var/lib/apt/lists/*
+
+# CASSANDRA
+RUN wget https://dlcdn.apache.org/cassandra/5.0.8/apache-cassandra-5.0.8-bin.tar.gz && tar -xf apache-cassandra-5.0.8-bin.tar.gz && rm apache-cassandra-5.0.8-bin.tar.gz
+
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH="${PATH}:/apache-cassandra-5.0.8/bin"
+
+COPY cassandra.sh /cassandra.sh
+CMD ["sh", "/cassandra.sh"]

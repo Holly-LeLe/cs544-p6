@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS prod;
+USE prod;
+SOURCE /schema.sql;
+
+CREATE DATABASE IF NOT EXISTS test;
+USE test;
+SOURCE /schema.sql;
