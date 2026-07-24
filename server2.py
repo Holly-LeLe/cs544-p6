@@ -216,7 +216,7 @@ def get_stock_monthly(db, ticker):
     monthly_data = {} # Key: YYYY-MM, Value: list of high prices
     for row in rows:
         if row.high is not None:
-            month_key = row.date.strftime("%Y-%m")
+            month_key = str(row.date)[:7]
             if month_key not in monthly_data:
                 monthly_data[month_key] = []
             monthly_data[month_key].append(row.high)
